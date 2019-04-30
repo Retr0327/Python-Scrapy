@@ -18,9 +18,12 @@ target=str(input("請輸入想要找尋的版面："))
 _res=Res.get("https://www.ptt.cc/bbs/"+str(target)+"/index.html", verify=False,)
 soup1=BeautifulSoup(_res.text)
 index_num=soup1.find_all("a", class_="btn wide")
+lst=[]
 for i in index_num:
-  print(i.get("href").replace("html","").replace("/index","").replace("/bbs/","").replace('movie1.',"").replace("movie","").replace("movie.","").replace(".","").replace(target,""))
-
+  b=i.get("href")
+  lst.append(b)
+print("總共有："+lst[1].replace(".html","").replace("/bbs/","").replace("/index","").replace(target,"")+"頁數")
+    
 start=int(input("起始資料："))
 end=int(input("終點資料："))
 
@@ -28,7 +31,6 @@ for num in range(start, end,-1):
   res=Res.get("https://www.ptt.cc/bbs/"+str(target)+"/index"+str(num)+".html", verify=False,)
 res.encoding='utf-8'
 soup=BeautifulSoup(res.text)
-
 
 Title=soup.find_all("div", class_="title")          # 獲取超連結
 lst=[]
