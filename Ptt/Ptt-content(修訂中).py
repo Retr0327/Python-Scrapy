@@ -14,9 +14,18 @@ bypass={
 Res=requests.session()
 res=Res.post('https://www.ptt.cc/ask/over18', verify=False, data=bypass)
 
-x=int(input("請輸入想找多少筆資料："))
-for num in range(1, x):
-  res=Res.get("https://www.ptt.cc/bbs/sex/index"+str(num)+".html", verify=False,)
+target=str(input("請輸入想要找尋的版面："))
+_res=Res.get("https://www.ptt.cc/bbs/"+str(target)+"/index.html", verify=False,)
+soup1=BeautifulSoup(_res.text)
+index_num=soup1.find_all("a", class_="btn wide")
+for i in index_num:
+  print(i.get("href").replace("html","").replace("/index","").replace("/bbs/","").replace('movie1.',"").replace("movie","").replace("movie.","").replace(".","").replace(target,""))
+
+start=int(input("起始資料："))
+end=int(input("終點資料："))
+
+for num in range(start, end,-1):
+  res=Res.get("https://www.ptt.cc/bbs/"+str(target)+"/index"+str(num)+".html", verify=False,)
 res.encoding='utf-8'
 soup=BeautifulSoup(res.text)
 
@@ -46,4 +55,4 @@ for i in range(lst_len):
   [s.extract() for s in soup('div', class_='push')]
   [s.extract() for s in soup('span', class_='push-ipdatetime')]
   print(main[0].text)
-  print("__________________________________________________________________________________")
+  print("__________________________________________________________________________________","\n")
