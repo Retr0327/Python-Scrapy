@@ -1,7 +1,6 @@
 import urllib3
 import requests
 from bs4 import BeautifulSoup
-import re 
 
 urllib3.disable_warnings()
 bypass={
@@ -59,11 +58,10 @@ for num in range(int(start)+1, end, -1):
     new_res=Res.get("https://www.ptt.cc/"+lst[i], verify=False,)
     new_res.encoding='utf-8'
     soup=BeautifulSoup(new_res.text)
-    main=soup.select("#main-content")
-    [s.extract() for s in soup('span', class_='f2')]
-    [s.extract() for s in soup('span', class_='f6')]
-    [s.extract() for s in soup('div', class_='push')]
-    [s.extract() for s in soup('span', class_='push-ipdatetime')]
-    print(main[0].text)
+    content=soup.find(id="main-content").text
+    target_content = u'※ 發信站: 批踢踢實業坊(ptt.cc),'
+    content = content.split(target_content)
+    print(content[0])
     print("__________________________________________________________________________________","\n")
   
+
