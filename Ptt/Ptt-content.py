@@ -39,7 +39,7 @@ for num in range(int(start)+1, end, -1):
   soup=BeautifulSoup(res.text)
   
   
-  Title=soup.find_all("div", class_="title")          # 獲取超連結
+  Title=soup.find_all("div", class_="title")          # 逐一列出超連結
   lst=[]
   for i in Title:
     a=i.find_all("a")
@@ -47,15 +47,15 @@ for num in range(int(start)+1, end, -1):
       href=j.get("href")
       lst.append(href)
 
-  del lst[-4:]                       #刪除公告項目
+  del lst[-4:]                       # 刪除公告項目的連結
 
 
   lst_len=len(lst)  
   
   for i in range(lst_len):
-    lst[i]                                     # 逐一列出所有連結
+    lst[i]                                     # 逐一列出所有連結，並爬取
     new_res=Res.get("https://www.ptt.cc/"+lst[i], verify=False)
-    new_res=Res.get("https://www.ptt.cc/"+lst[i], verify=False,)
+    new_res=Res.get("https://www.ptt.cc/"+lst[i], verify=False)
     new_res.encoding='utf-8'
     soup=BeautifulSoup(new_res.text)
     content=soup.find(id="main-content").text
