@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 
+month=str(input("請輸入月份："))      # 1~2月：0102
+
 headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
-res=requests.get('https://invoices.com.tw/0102.html')
+res=requests.get('https://invoices.com.tw/'+month+'.html')     
 res.encoding='utf-8'
 soup = BeautifulSoup(res.text, "html.parser")
 
