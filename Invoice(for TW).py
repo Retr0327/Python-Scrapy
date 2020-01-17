@@ -2,61 +2,60 @@ import requests
 from bs4 import BeautifulSoup
 
 month=str(input("請輸入月份："))
-
-headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
 res=requests.get('https://invoices.com.tw/'+month+'.html')
 res.encoding='utf-8'
-soup = BeautifulSoup(res.text, "html.parser")
+soup=BeautifulSoup(res.text, "html.parser")
 
-print(soup.select(".button")[0].text.replace(" ","、").replace("號","號："))
+x=soup.findAll("td", {"colspan":"3"})[2].get_text().split()
+print("領獎期間："+x[2]+x[3]+x[4])
 
+name=soup.findAll("td", {"class":"item", "width":"53"})
+Lst=[]
+for i in range(len(name)-7):
+  x=name[i].get_text()
+  Lst.append(x)
 
-x=soup.find_all("td", class_="number")
-b=x[0].text
-c=x[1].text
-d=x[2].text.split('.')
-d=d[0].replace("\n "," / ").replace("\n","")
-d1=d[:8]
-d2=d[8:16]
-d3=d[16:24]
-e=soup.select(".number3")[0].text.split('.')
-e=e[0].replace('\n',"").replace('、'," / ")
+num=soup.findAll("td", {"class":"number", "width":"200"})
+Lst_2=[]
+for j in num:
+  y=j.get_text().split()
+  Lst_2+=y
 
-print("1.特別獎："+b)
-print("2.特獎："+c)
-print("3.頭獎："+d1+" / "+d2+" / "+d3)
-print("4.增開六獎："+e)
+print("1. "+Lst[0]+"："+Lst_2[0])
+print("2. "+Lst[1]+"："+Lst_2[1])
+print("3. "+Lst[2]+"："+Lst_2[2]+ " / "+ Lst_2[3]+" / "+ Lst_2[4])
+num=soup.find("td", {"class":"number3"})
+small=num.get_text().replace("、", " / ")
+print("4. "+Lst[3]+"："+small)
 
 while True:
     a=str(input("請輸入發票數字碼："))
     if a =="e" or a=="E":
         break
-    if a ==(b):
+    if a == Lst_2[0]:
         print("中特別獎1,000萬元")
         continue
-    elif a==(c):
+    elif a == Lst_2[1]:
         print("中特獎2,00萬元")
         continue
-    elif a==(d1) or a==(d2) or a==(d3):
+    elif a == Lst_2[2] or a == Lst_2[3] or a == Lst_2[4]:
         print("中頭獎20萬元")
         continue
-    elif a[-7:]==(d1[1:8]) or a[-7:]==(d2[1:8]) or a[-7:]==(d3[1:8]):
+    elif a[-7:]==(Lst_2[2][1:8]) or a[-7:]==(Lst_2[3][1:8]) or a[-7:]==(Lst_2[4][1:8]):
         print("中頭獎4萬元")
         continue
-    elif a[-6:]==(d1[2:8]) or a[-6:]==(d2[2:8]) or a[-6:]==(d3[2:8]):
+    elif a[-6:]==(Lst_2[2][2:8]) or a[-6:]==(Lst_2[3][2:8]) or a[-6:]==(Lst_2[4][2:8]):
         print("中三獎1萬元")
         continue
-    elif a[-5:]==(d1[3:8]) or a[-5:]==(d2[3:8]) or a[-5:]==(d3[3:8]):
+    elif a[-5:]==(Lst_2[2][3:8]) or a[-5:]==(Lst_2[3][3:8]) or a[-5:]==(Lst_2[4][3:8]):
         print("中四獎4千元")
         continue
-    elif a[-4:]==(d1[4:8]) or a[-4:]==(d2[4:8]) or a[-4:]==(d3[4:8]):
+    elif a[-4:]==(Lst_2[2][4:8]) or a[-4:]==(Lst_2[3][4:8]) or a[-4:]==(Lst_2[4][4:8]):
         print("中五獎1千元")
         continue
-    elif a[-3:]==(d1[5:8]) or a[-3:]==(d2[5:8]) or a[-3:]==(d3[5:8]):
+    elif a[-3:]==(Lst_2[2][5:8]) or a[-3:]==(Lst_2[3][5:8]) or a[-3:]==(Lst_2[4][5:8]):
         print("中六獎200元")
         continue
-    elif a[-3:]==(e[-3:]) or a[-3:]==(e[-9:-6]) or a[-3:]==(e[:3]):
+    elif a[-3:]==(small[-3:]) or a[-3:]==(small[-9:-6]) or a[-3:]==(small[:3]):
         print("中增開六獎200元")
         continue
-
-
