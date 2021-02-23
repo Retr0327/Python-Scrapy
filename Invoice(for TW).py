@@ -1,61 +1,52 @@
 import requests
 from bs4 import BeautifulSoup
 
-month=str(input("請輸入月份："))
-res=requests.get('https://invoices.com.tw/'+month+'.html')
+res=requests.get('https://invoices.com.tw/1112.html')
 res.encoding='utf-8'
-soup=BeautifulSoup(res.text, "html.parser")
-
-x=soup.findAll("td", {"colspan":"3"})[2].get_text().split()
-print("領獎期間："+x[2]+x[3]+x[4])
-
-name=soup.findAll("td", {"class":"item", "width":"53"})
-Lst=[]
-for i in range(len(name)-7):
-  x=name[i].get_text()
-  Lst.append(x)
-
-num=soup.findAll("td", {"class":"number", "width":"200"})
-Lst_2=[]
-for j in num:
-  y=j.get_text().split()
-  Lst_2+=y
-
-print("1. "+Lst[0]+"："+Lst_2[0])
-print("2. "+Lst[1]+"："+Lst_2[1])
-print("3. "+Lst[2]+"："+Lst_2[2]+ " / "+ Lst_2[3]+" / "+ Lst_2[4])
-num=soup.find("td", {"class":"number3"})
-small=num.get_text().replace("、", " / ")
-print("4. "+Lst[3]+"："+small)
+bsObj=BeautifulSoup(res.text, "html.parser")
+title=bsObj.find('title').text
+date=bsObj.findAll("td", {"colspan":"3"})
+win=bsObj.findAll('tr', {'class':"tr"})
+print(title.split(' ')[0], '11、12月發票')
+print("領獎時間：", ' '.join(date[2].text.split(' ')[2:5]))
+special=win[0].text.split('\n')[2]
+jury=win[1].text.split('\n')[1] 
+jackpot=win[2].text.split('\n')[1:4]
+addit=win[3].text.split('\n')[1]
+print("1. 特別：", special)
+print("2. 特獎：", jury)
+print("3. 頭獎：", ' / '.join(jackpot))
+print("4. 增開：", addit.replace("、", ' / '), '\n')
 
 while True:
     a=str(input("請輸入發票數字碼："))
+    print(a)
     if a =="e" or a=="E":
         break
-    if a == Lst_2[0]:
+    if a == special:
         print("中特別獎1,000萬元")
         continue
-    elif a == Lst_2[1]:
+    elif a == jury:
         print("中特獎2,00萬元")
         continue
-    elif a == Lst_2[2] or a == Lst_2[3] or a == Lst_2[4]:
+    elif a in jackpot:
         print("中頭獎20萬元")
         continue
-    elif a[-7:]==(Lst_2[2][1:8]) or a[-7:]==(Lst_2[3][1:8]) or a[-7:]==(Lst_2[4][1:8]):
-        print("中頭獎4萬元")
+    elif a[1:] in list(map(lambda i: i[1:], jackpot)):
+        print("中二獎4萬元")
         continue
-    elif a[-6:]==(Lst_2[2][2:8]) or a[-6:]==(Lst_2[3][2:8]) or a[-6:]==(Lst_2[4][2:8]):
+    elif a[2:] in list(map(lambda i: i[2:], jackpot)):
         print("中三獎1萬元")
         continue
-    elif a[-5:]==(Lst_2[2][3:8]) or a[-5:]==(Lst_2[3][3:8]) or a[-5:]==(Lst_2[4][3:8]):
+    elif a[3:] in list(map(lambda i: i[3:], jackpot)):
         print("中四獎4千元")
-        continue
-    elif a[-4:]==(Lst_2[2][4:8]) or a[-4:]==(Lst_2[3][4:8]) or a[-4:]==(Lst_2[4][4:8]):
+        continue      
+    elif a[4:] in list(map(lambda i: i[4:], jackpot)):
         print("中五獎1千元")
         continue
-    elif a[-3:]==(Lst_2[2][5:8]) or a[-3:]==(Lst_2[3][5:8]) or a[-3:]==(Lst_2[4][5:8]):
+    elif a[5:] in list(map(lambda i: i[5:], jackpot)):
         print("中六獎200元")
         continue
-    elif a[-3:]==(small[-3:]) or a[-3:]==(small[-9:-6]) or a[-3:]==(small[:3]):
+    elif a[-3:] in addit.split('、'):
         print("中增開六獎200元")
         continue
