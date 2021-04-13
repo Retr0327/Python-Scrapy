@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 
-class Invoice:
+class Receipt:
     def __init__(self, month):
         self.month = month
         self.res=requests.get(f'https://invoices.com.tw/{month}.html')
@@ -50,6 +50,6 @@ class Invoice:
             elif target[5:] in list(map(lambda i: i[5:], l[2])):
                 print("中六獎200元")
 
-i = Invoice('0102')
-i.show()  
-i.check()
+# i = Receipt('0102')
+# i.show()  
+# i.check()
